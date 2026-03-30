@@ -41,7 +41,7 @@ class User(db.Model):
     name       = db.Column(db.String(100), nullable=False)
     email      = db.Column(db.String(150), unique=True, nullable=False)
     password   = db.Column(db.String(255), nullable=False)
-    role       = db.Column(db.Enum('student', 'teacher'), nullable=False)
+    role       = db.Column(db.Enum('student', 'teacher', name='user_role'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     enrollments      = db.relationship('Enrollment',     backref='student', lazy=True)
@@ -124,7 +124,7 @@ class Submission(db.Model):
     assignment_id = db.Column(db.Integer, db.ForeignKey('assignments.id'), nullable=False)
     file_links    = db.Column(db.Text)       # comma-separated links/filenames
     text_answer   = db.Column(db.Text)       # typed answer
-    status        = db.Column(db.Enum('submitted', 'graded'), default='submitted')
+    status        = db.Column(db.Enum('submitted', 'graded', name='submission_status'), default='submitted')
     score         = db.Column(db.Integer)
     feedback      = db.Column(db.Text)       # teacher written feedback
     submitted_at  = db.Column(db.DateTime, default=datetime.utcnow)
@@ -151,7 +151,7 @@ class Announcement(db.Model):
     body       = db.Column(db.Text, nullable=False)
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'), nullable=True)
     author_id  = db.Column(db.Integer, db.ForeignKey('users.id'),    nullable=False)
-    type       = db.Column(db.Enum('announcement', 'material', 'assignment'), default='announcement')
+    type       = db.Column(db.Enum('announcement', 'material', 'assignment', name='post_type'), default='announcement')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     stream_comments = db.relationship('StreamComment', backref='announcement', lazy=True)
 
@@ -190,7 +190,7 @@ class PrivateComment(db.Model):
     submission_id = db.Column(db.Integer, db.ForeignKey('submissions.id'), nullable=False)
     author_id     = db.Column(db.Integer, db.ForeignKey('users.id'),       nullable=False)
     text          = db.Column(db.Text, nullable=False)
-    role          = db.Column(db.Enum('student', 'teacher'), nullable=False)
+    role          = db.Column(db.Enum('student', 'teacher', name='user_role'), nullable=False)
     created_at    = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
