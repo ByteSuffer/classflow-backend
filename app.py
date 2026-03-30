@@ -652,3 +652,9 @@ if __name__ == '__main__':
         db.create_all()
         print('✅ Database tables created')
     app.run(debug=True, port=5000)
+
+@app.route('/api/seed-once', methods=['GET'])
+def seed_once():
+    from seed import seed
+    seed()
+    return jsonify({'status': 'seeded'})
